@@ -17,21 +17,26 @@ The following link provides instructions on enabling trace logging for the KahaD
 After enabling trace logging and the output is captured, copy the log file to the resources directory of this project.
 
 # Building the project:
-
+`
 mvn clean install
+`
 
 # Running the project:
-
+`
 mvn -Dconcise=true exec:java -Dexec.mainClass="com.redhat.KahaDBTraceAnalyzer" -Dexec.args="kahadb.log"
+`
 
 # Options:
-
+```
 concise=true - only show destinations which are using journal files
 concise=false - (default) show all destinations
+```
 
 # Arguments
 
+`
 Arg[0] = Name of log file (default = kahadb.log)
+`
 
 # Output from the analysis
 ```
