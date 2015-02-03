@@ -48,7 +48,7 @@ public class KahaDBTraceAnalyzer
             LOG_FILE = args[0];
         }
         String sConcise = System.getProperty("concise", "false");
-        //System.out.println("concise: " + sConcise);
+        
         if(sConcise.equalsIgnoreCase("true"))
         {
            concise = true;
@@ -59,10 +59,9 @@ public class KahaDBTraceAnalyzer
 
     private void analyze()
     {
-        //read log file
         try
         {
-	        System.out.println("Using log file: " + LOG_FILE);
+	    System.out.println("Using log file: " + LOG_FILE);
             URL fileURL = this.getClass().getResource( "/" + LOG_FILE );
             if(fileURL == null)
             {
@@ -77,8 +76,7 @@ public class KahaDBTraceAnalyzer
             {
                 if((line.contains("MessageDatabase")) && (line.contains("gc candidates")))
                 {
-                    //System.out.println(line);
-                    // strip the line and get to the important stuff
+                    
                     line = line.substring(line.indexOf("gc candidates"), line.length());
                     // beginning of trace output, acquire full journal set
                     if(line.contains("set:"))
@@ -101,7 +99,6 @@ public class KahaDBTraceAnalyzer
                     // only makes sense to gather stats once we have the full set
                     if(fullSet != null) {
 
-                        // check set after first transaction
                         if (line.contains("after first tx:")) {
                             currentSet = acquireSet(line, false);
                             inUse = priorSet.length - currentSet.length;
@@ -109,8 +106,7 @@ public class KahaDBTraceAnalyzer
                             count = count - inUse;
                             priorSet = currentSet;
                         }
-
-                        // check set after producerSequenceIdTrackerLocation
+                        
                         if (line.contains("producerSequenceIdTrackerLocation")) {
                             currentSet = acquireSet(line, false);
                             inUse = priorSet.length - currentSet.length;
@@ -152,11 +148,7 @@ public class KahaDBTraceAnalyzer
                     }
 
                     if ((line.contains("MessageDatabase")) && (line.contains("Checkpoint done."))) {
-                        // once we know we have a full set, then we can look for the checkpoint done message
-                        //if (fullSet != null) {
-                            //System.out.println("Checkpoint complete!");
-                            checkpointDone = true;
-                        //}
+                        checkpointDone = true;
                     }
                 }
             }
@@ -205,7 +197,6 @@ public class KahaDBTraceAnalyzer
     private String acquireDest(String line)
     {
         String type = line.substring(line.indexOf("dest:") + 5, line.indexOf("dest:") + 6);
-        //System.out.println("Type: " + type);
         line = line.substring(line.indexOf("dest:") + 7, line.length());
         return line.substring(0, line.indexOf(",")) + (type.equals("0") ? " (Queue)" : " (Topic)");
     }
