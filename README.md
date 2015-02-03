@@ -16,11 +16,11 @@ The following link provides instructions on enabling trace logging for the KahaD
 
 After enabling trace logging and the output is captured, copy the log file to the resources directory of this project.
 
-# building the project:
+# Building the project:
 
 mvn clean install
 
-# running the project:
+# Running the project:
 
 mvn -Dconcise=true exec:java -Dexec.mainClass="com.redhat.KahaDBTraceAnalyzer" -Dexec.args="kahadb.log"
 
@@ -36,7 +36,7 @@ Arg[0] = Name of log file (default = kahadb.log)
 # Output from the analysis
 
    Acquiring Full Set...
-
+   
    Full journal set: 725
    1 --- producerSequenceIdTrackerLocation
    0 --- tx range
@@ -49,7 +49,7 @@ Arg[0] = Name of log file (default = kahadb.log)
    718 --- ActiveMQ.DLQ (Queue)
    Journals containing acks: 1
    Candidates for cleanup: 0
-
+   
    Analysis is complete
 
 The output above shows which destinations are using the journal files.  In this case the Activemq.DLQ is the biggest offender with 718 journal files in use.
