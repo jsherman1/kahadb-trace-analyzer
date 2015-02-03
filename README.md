@@ -34,7 +34,7 @@ concise=false - (default) show all destinations
 Arg[0] = Name of log file (default = kahadb.log)
 
 # Output from the analysis
-
+```
    Acquiring Full Set...
    
    Full journal set: 725
@@ -51,6 +51,7 @@ Arg[0] = Name of log file (default = kahadb.log)
    Candidates for cleanup: 0
    
    Analysis is complete
+```
 
 The output above shows which destinations are using the journal files.  In this case the Activemq.DLQ is the biggest offender with 718 journal files in use.
 The result is that there are no journal files available for clean up at this time.  The recommendation in this case would be to purge the Activem.DLQ to free up
@@ -60,6 +61,7 @@ space if these messages are no longer needed.
 
 In some cases the analysis might be incomplete if the log file rolled during the logging.  In this case you might see the following output:
 
+```
    Acquiring Full Set...
 
    Full journal set: 725
@@ -71,9 +73,12 @@ In some cases the analysis might be incomplete if the log file rolled during the
    Candidates for cleanup: 0
 
    !!! Unable to determine if checkpoint is done. Please try increasing log size !!!
+```
 
 Or there could be cases where the beginning of the output is missing:
 
+```
    Unable to determine full log set
    Check that TRACE level logging has been enabled for org.apache.activemq.store.kahadb.MessageDatabase
    and that the log contains a full output from the trace logging.  In some cases you may need to increase the log size.
+```
