@@ -88,4 +88,4 @@ Or there could be cases where the beginning of the output is missing:
    and that the log contains a full output from the trace logging.  In some cases you may need to increase the log size.
 ```
 
-Should one of these cases occur try increasing the log file size to prevent it from rolling.
+Should one of these cases occur try increasing the log file size when capturing the trace logging to prevent it from rolling.
