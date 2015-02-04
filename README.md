@@ -22,9 +22,9 @@ mvn clean install
 `
 
 # Running the project:
-`
+```
 mvn -Dconcise=true exec:java -Dexec.mainClass="com.redhat.KahaDBTraceAnalyzer" -Dexec.args="kahadb.log"
-`
+```
 
 # Options:
 ```
