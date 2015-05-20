@@ -204,8 +204,9 @@ public class KahaDBTraceAnalyzer {
     private String acquireDest(String line) {
         String type = line.substring(line.indexOf("dest:") + 5, line.indexOf("dest:") + 6);
         line = line.substring(line.indexOf("dest:") + 7, line.length());
+        line = line.substring(0, line.indexOf(",")) + (type.equals("0") ? " (Queue)" : " (Topic)");
 
-        return line.substring(0, line.indexOf(",")) + (type.equals("0") ? " (Queue)" : " (Topic)");
+        return line;
     }
 
     private void logDestStats(String dest, int count) {
