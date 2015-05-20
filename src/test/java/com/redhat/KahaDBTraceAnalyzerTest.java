@@ -83,6 +83,6 @@ public class KahaDBTraceAnalyzerTest {
         Assert.assertEquals(new Integer(0), stats.get("producerSequenceIdTrackerLocation"));
         Assert.assertEquals(new Integer(4), stats.get("Queue.5 (Queue)"));
         Assert.assertEquals(new Integer(0), stats.get("ActiveMQ.DLQ-2 (Queue)"));
-        Assert.assertEquals(new Integer(2), stats.get("DLQ-EMPTY (Queue)")); //should it not be 0?
+        Assert.assertEquals(new Integer(2), stats.get("DLQ-EMPTY (Queue)"));
     }
 }
