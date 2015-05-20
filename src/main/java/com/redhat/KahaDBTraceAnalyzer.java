@@ -46,11 +46,10 @@ public class KahaDBTraceAnalyzer {
 
     public static void main(String[] args) {
         KahaDBTraceAnalyzer analyzer = new KahaDBTraceAnalyzer();
-        analyzer.parseArgs(args);
-        analyzer.analyze();
+        analyzer.analyze(args);
     }
 
-    public void parseArgs(String[] args) {
+    private void parseArgs(String[] args) {
         if (args.length > 0) {
             LOG_FILE = args[0];
         }
@@ -61,7 +60,9 @@ public class KahaDBTraceAnalyzer {
         }
     }
 
-    public void analyze() {
+    public Map<String, Integer> analyze(String[] args) {
+        parseArgs(args);
+
         try {
             System.out.println("Using log file: " + LOG_FILE);
 
@@ -162,6 +163,8 @@ public class KahaDBTraceAnalyzer {
             System.out.println("Error: " + urise);
             System.exit(-2);
         }
+
+        return stats;
     }
 
     private URL getLogFileURL(String log) throws MalformedURLException {
@@ -212,6 +215,8 @@ public class KahaDBTraceAnalyzer {
         }
 
         System.out.println(count + " --- " + dest);
+
+        stats.put(dest, count);
     }
 
     private void logStats() {
