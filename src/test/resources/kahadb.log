@@ -1,0 +1,10 @@
+ 2015-05-20 18:54:22,909 [eckpoint Worker] DEBUG MessageDatabase                - Checkpoint started.
+ 2015-05-20 18:54:22,911 [eckpoint Worker] TRACE MessageDatabase                - Last update: 10:1169392, full gc candidates set: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+ 2015-05-20 18:54:22,911 [eckpoint Worker] TRACE MessageDatabase                - gc candidates after producerSequenceIdTrackerLocation:10, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+ 2015-05-20 18:54:22,911 [eckpoint Worker] TRACE MessageDatabase                - gc candidates after tx range:[null, null], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+ 2015-05-20 18:54:22,911 [eckpoint Worker] TRACE MessageDatabase                - gc candidates after dest:0:Queue.5, [1, 2, 3, 4, 5]
+ 2015-05-20 18:54:22,911 [eckpoint Worker] TRACE MessageDatabase                - gc candidates after dest:0:Queue.3, [6, 7, 8]
+ 2015-05-20 18:54:22,911 [eckpoint Worker] TRACE MessageDatabase                - gc candidates after dest:0:ActiveMQ.DLQ-2, [9, 10]
+ 2015-05-20 18:54:22,911 [eckpoint Worker] TRACE MessageDatabase                - gc candidates after dest:0:DLQ-EMPTY, []
+ 2015-05-20 18:54:22,912 [eckpoint Worker] TRACE MessageDatabase                - gc candidates: []
+ 2015-05-20 18:54:22,912 [eckpoint Worker] DEBUG MessageDatabase                - Checkpoint done.
