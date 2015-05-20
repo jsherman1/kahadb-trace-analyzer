@@ -92,6 +92,7 @@ public class KahaDBTraceAnalyzer {
 
                         System.out.println("Acquiring Full Set...");
 
+                        stats.clear();
                         fullSet = acquireSet(line, false);
                         System.out.println("\nFull journal set: " + fullSet.length);
                         count = fullSet.length;
