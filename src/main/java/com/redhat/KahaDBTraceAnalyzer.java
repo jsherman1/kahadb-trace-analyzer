@@ -38,7 +38,9 @@ public class KahaDBTraceAnalyzer
     private static String LOG_FILE = "kahadb.log";
     private int count = -1;
     private int containsAcks = 0;
+    private int inUse = 0;
     private static boolean concise = false;
+    private static boolean time = false;
     private boolean checkpointDone = false;
 
     public static void main( String[] args )
@@ -52,6 +54,12 @@ public class KahaDBTraceAnalyzer
         if(sConcise.equalsIgnoreCase("true"))
         {
            concise = true;
+        }
+        String sTime = System.getProperty("time", "false");
+        
+        if(sTime.equalsIgnoreCase("true"))
+        {
+           time = true;
         }
         KahaDBTraceAnalyzer analyzer = new KahaDBTraceAnalyzer();
         analyzer.analyze();
@@ -70,13 +78,13 @@ public class KahaDBTraceAnalyzer
             }
             BufferedReader br = new BufferedReader(new FileReader(new File(fileURL.toURI())));
             String line;
-            int inUse = 0;
+            inUse = 0;
 
             while ((line = br.readLine()) != null)
             {
                 if((line.contains("MessageDatabase")) && (line.contains("gc candidates")))
                 {
-                    
+                    String orginLine = line;
                     line = line.substring(line.indexOf("gc candidates"), line.length());
                     // beginning of trace output, acquire full journal set
                     if(line.contains("set:"))
@@ -89,55 +97,26 @@ public class KahaDBTraceAnalyzer
                             containsAcks = 0;
                             checkpointDone = false;
                         }
-                        System.out.println("Acquiring Full Set...");
+                        System.out.println("Acquiring Full Set...\n");
                         fullSet = acquireSet(line, false);
-                        System.out.println("\nFull journal set: " + fullSet.length);
+                        if(time){
+	                       System.out.println("Time: " + orginLine.substring(0, orginLine.indexOf(",") + 4));
+                        }
+                        System.out.println("Full journal set: " + fullSet.length);
                         count = fullSet.length;
                         priorSet = fullSet;
                     }
 
                     // only makes sense to gather stats once we have the full set
                     if(fullSet != null) {
-
-                        if (line.contains("after first tx:")) {
-                            currentSet = acquireSet(line, false);
-                            inUse = priorSet.length - currentSet.length;
-                            logDestStats("after first tx", inUse);
-                            count = count - inUse;
-                            priorSet = currentSet;
-                        }
-                        
-                        if (line.contains("producerSequenceIdTrackerLocation")) {
-                            currentSet = acquireSet(line, false);
-                            inUse = priorSet.length - currentSet.length;
-                            logDestStats("producerSequenceIdTrackerLocation", inUse);
-                            count = count - inUse;
-                            priorSet = currentSet;
-                        }
-
-                        if (line.contains("ackMessageFileMapLocation")) {
-                            currentSet = acquireSet(line, false);
-                            inUse = priorSet.length - currentSet.length;
-                            logDestStats("ackMessageFileMapLocation", inUse);
-                            count = count - inUse;
-                            priorSet = currentSet;
-                        }
-
-                        if (line.contains("tx range")) {
-                            currentSet = acquireSet(line, true);
-                            inUse = priorSet.length - currentSet.length;
-                            logDestStats("tx range", inUse);
-                            count = count - inUse;
-                            priorSet = currentSet;
-                        }
-
-                        if (line.contains("dest")) {
-                            currentSet = acquireSet(line, false);
-                            inUse = priorSet.length - currentSet.length;
-                            logDestStats(acquireDest(line), inUse);
-                            count = count - inUse;
-                            priorSet = currentSet;
-                        }
+	 
+	                    if(line.contains("candidates after")){
+		                    /*
+		                    *  this metod will be invoked for: after first tx, producerSequenceIdTrackerLocation, ackMessageFileMapLocation,
+		                    *  tx range, and each destination found in the check point list
+		                    */
+		                    processUsage(line);
+	                    }
                     }
                 }
 
@@ -166,6 +145,24 @@ public class KahaDBTraceAnalyzer
             System.out.println("Error: " + urise);
             System.exit(-2);
         }
+    }
+
+    private void processUsage(String line)
+    {
+	    String name = line.substring(line.indexOf("candidates after") + 17, line.indexOf(":"));
+	    //System.out.println("name:" + name);
+	    if(name.contains("dest")){
+		   name = acquireDest(line);
+	    }
+	    //System.out.println("Processing " + name + " ...");
+	   	currentSet = acquireSet(line, name.equals("tx range"));
+	    // inUse is calculated by the difference of the prior candidate set number and the current candiate set number
+	    // the difference is the number of journal files used by this destination
+	    // This being the case logging order is important in order to get accurate results
+        inUse = priorSet.length - currentSet.length;
+        logDestStats(name, inUse);
+        count = count - inUse;
+        priorSet = currentSet;
     }
 
     private String[] acquireSet(String line, boolean tx)

@@ -30,6 +30,8 @@ mvn -Dconcise=true exec:java -Dexec.mainClass="com.redhat.KahaDBTraceAnalyzer" -
 ```
 concise=true - only show destinations which are using journal files
 concise=false - (default) show all destinations
+time=true - display log time from full set
+time=false - (default) time is not shown
 ```
 
 # Arguments

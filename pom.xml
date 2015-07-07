@@ -32,15 +32,14 @@
                             <goal>java</goal>
                          </goals>
                          <configuration>
-                             <mainClass>com.redhat.TraceAnalyzer</mainClass>
+                             <mainClass>com.redhat.KahaDBTraceAnalyzer</mainClass>
                              <arguments>
-                                <argument>kahadb-trace.log</argument>
+                                <argument>kahadb.log</argument>
                              </arguments>
                          </configuration>
                       </execution>
                    </executions>
              </plugin>
-          </plugins>
        </build>
     </profile>
   </profiles>
