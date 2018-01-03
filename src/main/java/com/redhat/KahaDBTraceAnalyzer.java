@@ -41,6 +41,7 @@ public class KahaDBTraceAnalyzer
     private int inUse = 0;
     private static boolean concise = false;
     private static boolean time = false;
+    private static boolean debug = false;
     private boolean checkpointDone = false;
 
     public static void main( String[] args )
@@ -61,6 +62,13 @@ public class KahaDBTraceAnalyzer
         {
            time = true;
         }
+        String sDebug = System.getProperty("debug", "false");
+
+        if(sDebug.equalsIgnoreCase("true"))
+        {
+            debug = true;
+        }
+
         KahaDBTraceAnalyzer analyzer = new KahaDBTraceAnalyzer();
         analyzer.analyze();
     }
@@ -155,10 +163,16 @@ public class KahaDBTraceAnalyzer
 		   name = acquireDest(line);
 	    }
 	    //System.out.println("Processing " + name + " ...");
-	   	currentSet = acquireSet(line, name.equals("tx range"));
+	   	currentSet = acquireSet(line, name.contains("tx range"));
 	    // inUse is calculated by the difference of the prior candidate set number and the current candiate set number
 	    // the difference is the number of journal files used by this destination
 	    // This being the case logging order is important in order to get accurate results
+        if(debug)
+        {
+            System.out.println("Dest: " + name);
+            System.out.println("priorSet.length: " + priorSet.length);
+            System.out.println("currentSet.length: " + currentSet.length);
+        }
         inUse = priorSet.length - currentSet.length;
         logDestStats(name, inUse);
         count = count - inUse;
@@ -174,6 +188,11 @@ public class KahaDBTraceAnalyzer
         {
             line = line.substring(line.indexOf("]") + 2, line.length());
             line = line.substring(line.indexOf("[") + 1, line.indexOf("]"));
+
+            if(debug)
+            {
+                System.out.println("tx range set: " + line);
+            }
         }
         else
         {
